@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String     @id
+  name                  String
+  gender                String?
+  servicePattern        String?
+  phone                 String?
+  address               String?
+  wheelchairRequired    Boolean    @default(false)
+  medicineCheckRequired Boolean    @default(false)
+  note                  String?
+  rideStops             RideStop[]
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+}
+
+model Vehicle {
+  id        String     @id
+  name      String
+  capacity  Int?
+  note      String?
+  ridePlans RidePlan[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Staff {
+  id                   String     @id
+  name                 String
+  role                 String
+  qualification        String?
+  driverRidePlans      RidePlan[] @relation("DriverRidePlans")
+  attendantRidePlans   RidePlan[] @relation("AttendantRidePlans")
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+}
+
+model RidePlan {
+  id          String     @id
+  serviceDate String?
+  weekday     String?
+  period      String
+  vehicleId   String?
+  driverId    String?
+  attendantId String?
+  weather     String?
+  status      String     @default("draft")
+  vehicle     Vehicle?   @relation(fields: [vehicleId], references: [id])
+  driver      Staff?     @relation("DriverRidePlans", fields: [driverId], references: [id])
+  attendant   Staff?     @relation("AttendantRidePlans", fields: [attendantId], references: [id])
+  rideStops   RideStop[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([serviceDate, period])
+}
+
+model RideStop {
+  id             String      @id
+  ridePlanId     String
+  userId         String
+  order          Int
+  scheduledTime  String?
+  address        String?
+  phone          String?
+  note           String?
+  status         String      @default("planned")
+  canceledReason String?
+  arrivedAt      String?
+  boardedAt      String?
+  departedAt     String?
+  completedAt    String?
+  skippedAt      String?
+  ridePlan       RidePlan    @relation(fields: [ridePlanId], references: [id], onDelete: Cascade)
+  user           User        @relation(fields: [userId], references: [id])
+  events         RideEvent[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([ridePlanId, order])
+}
+
+model RideEvent {
+  id         String   @id
+  rideStopId String
+  eventType  String
+  occurredAt String
+  actorRole  String
+  actorName  String
+  note       String?
+  rideStop   RideStop @relation(fields: [rideStopId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([rideStopId, occurredAt])
+}
