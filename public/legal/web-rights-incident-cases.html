@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>無断で使ったWeb制作物は、裁判になる</title>
+    <meta
+      name="description"
+      content="Web制作、LP、営業デモで他人の制作物・写真・口コミ・実績・データを無断利用したときに起きる法務リスクと実例を整理した社内向け資料。"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17191f;
+        --muted: #5d6370;
+        --line: #d9dee8;
+        --paper: #f5f7fb;
+        --panel: #ffffff;
+        --accent: #b42318;
+        --accent-soft: #fff1ee;
+        --navy: #16233b;
+        --green: #1f6b57;
+        --gold: #8a6200;
+        --blue: #2457a6;
+        --shadow: 0 18px 45px rgba(19, 29, 48, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui,
+          sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.75;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      .hero {
+        background:
+          linear-gradient(rgba(16, 25, 42, 0.74), rgba(16, 25, 42, 0.64)),
+          url("https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80")
+            center / cover;
+        color: #fff;
+        min-height: 74vh;
+        display: flex;
+        align-items: center;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero-inner {
+        padding: 72px 0 58px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 18px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        color: #ffd7d1;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: #ffd7d1;
+      }
+
+      h1 {
+        max-width: 940px;
+        margin: 0;
+        font-size: clamp(38px, 7vw, 84px);
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 780px;
+        margin: 26px 0 0;
+        font-size: clamp(17px, 2.1vw, 23px);
+        color: #eef2f8;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        padding: 10px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        border-color: #fff;
+        background: #fff;
+        color: var(--navy);
+      }
+
+      main {
+        padding: 34px 0 72px;
+      }
+
+      .summary-band {
+        margin-top: -62px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .summary {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 22px;
+      }
+
+      .summary h2,
+      section h2 {
+        margin: 0;
+        font-size: clamp(24px, 3.2vw, 38px);
+        line-height: 1.25;
+        letter-spacing: 0;
+      }
+
+      .summary p,
+      section p {
+        margin: 12px 0 0;
+        color: var(--muted);
+      }
+
+      .principles {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .principle {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 12px;
+        background: #fbfcff;
+      }
+
+      .principle strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .principle span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      section {
+        padding: 56px 0 0;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+
+      .section-note {
+        max-width: 420px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .risk-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .risk {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        min-height: 170px;
+      }
+
+      .risk b {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .risk p {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .cases {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .case {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .case-header {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .case h3 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.35;
+      }
+
+      .tag {
+        flex: 0 0 auto;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #eef3ff;
+        color: var(--blue);
+      }
+
+      .tag.red {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      .tag.green {
+        background: #edf8f4;
+        color: var(--green);
+      }
+
+      .tag.gold {
+        background: #fff6dc;
+        color: var(--gold);
+      }
+
+      .case dl {
+        margin: 16px 0 0;
+      }
+
+      .case dt {
+        margin-top: 12px;
+        color: var(--ink);
+        font-weight: 800;
+        font-size: 14px;
+      }
+
+      .case dd {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .case .source {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .step {
+        background: var(--navy);
+        color: #fff;
+        border-radius: 8px;
+        padding: 18px;
+        min-height: 160px;
+      }
+
+      .step span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--navy);
+        font-weight: 800;
+      }
+
+      .step h3 {
+        margin: 14px 0 6px;
+        font-size: 18px;
+      }
+
+      .step p {
+        margin: 0;
+        color: #dbe4f2;
+        font-size: 14px;
+      }
+
+      .checklist {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+      }
+
+      .checklist ul {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 18px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .checklist li {
+        position: relative;
+        padding-left: 28px;
+        color: var(--muted);
+      }
+
+      .checklist li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.56em;
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--green);
+        border-radius: 3px;
+      }
+
+      .sources {
+        background: #111827;
+        color: #eff4fb;
+        padding: 50px 0;
+        margin-top: 64px;
+      }
+
+      .sources h2 {
+        color: #fff;
+      }
+
+      .sources p {
+        color: #c8d1df;
+      }
+
+      .source-list {
+        columns: 2;
+        column-gap: 28px;
+        margin: 20px 0 0;
+        padding-left: 18px;
+      }
+
+      .source-list li {
+        break-inside: avoid;
+        margin-bottom: 10px;
+      }
+
+      .source-list a {
+        color: #b9d3ff;
+      }
+
+      footer {
+        padding: 24px 0 38px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        .summary,
+        .cases,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .risk-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .section-note {
+          margin-top: 8px;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .wrap {
+          width: min(100% - 28px, 1120px);
+        }
+
+        .hero {
+          min-height: 82vh;
+        }
+
+        .hero-inner {
+          padding: 54px 0 84px;
+        }
+
+        .summary-band {
+          margin-top: -78px;
+        }
+
+        .principles,
+        .risk-grid,
+        .checklist ul {
+          grid-template-columns: 1fr;
+        }
+
+        .source-list {
+          columns: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap hero-inner">
+        <p class="eyebrow">WEB制作・LP・営業デモの権利侵害リスク</p>
+        <h1>無断で使ったWeb制作物は、裁判になる</h1>
+        <p class="lead">
+          写真、文章、イラスト、動画、口コミ、ロゴ、実績、顧客データ。
+          人が作ったもの、人に紐づく情報、人の信用には権利がある。
+          「参考にしただけ」「AIで整えただけ」「デモだから」は、免罪符にならない。
+        </p>
+        <div class="hero-actions" aria-label="ページ内リンク">
+          <a class="button primary" href="#cases">実例を見る</a>
+          <a class="button" href="#checklist">送付前チェック</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap summary-band">
+        <div class="summary">
+          <div>
+            <h2>このページの結論</h2>
+            <p>
+              Web制作は素材を集めて並べる作業ではない。使う前に「誰が作ったか」
+              「誰が写っているか」「誰が提供した情報か」「広告として根拠があるか」を確認する必要がある。
+              ここを外すと、差止、損害賠償、行政処分、裁判に発展する。
+            </p>
+          </div>
+          <div class="principles" aria-label="守るべき権利">
+            <div class="principle">
+              <strong>作った人の権利</strong>
+              <span>文章、写真、イラスト、動画、コード、デザイン。</span>
+            </div>
+            <div class="principle">
+              <strong>写った人の権利</strong>
+              <span>肖像、プライバシー、職業上の信用。</span>
+            </div>
+            <div class="principle">
+              <strong>情報を出した人の利益</strong>
+              <span>個人情報、行動履歴、顧客データ、営業情報。</span>
+            </div>
+            <div class="principle">
+              <strong>見る人の判断を守る規制</strong>
+              <span>景品表示法、ステマ規制、特商法、特定電子メール法。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="wrap">
+        <div class="section-head">
+          <h2>Web制作で起きる5つの事故</h2>
+          <p class="section-note">
+            どれも「見た目をよくするため」「営業しやすくするため」に起きやすい。
+          </p>
+        </div>
+        <div class="risk-grid">
+          <article class="risk">
+            <b>素材の無断使用</b>
+            <p>検索画像、SNS写真、他社サイトの文章、既存イラストを許諾なく使う。</p>
+          </article>
+          <article class="risk">
+            <b>顧客情報の無断使用</b>
+            <p>社名、ロゴ、導入画面、成果数値、会議資料を事例として載せる。</p>
+          </article>
+          <article class="risk">
+            <b>AI生成物の確認漏れ</b>
+            <p>既存作品に似た画像や文章を、そのままLPや広告に使う。</p>
+          </article>
+          <article class="risk">
+            <b>口コミ・レビューの広告利用</b>
+            <p>第三者評価に見せて、実際は依頼・提供・編集された表示を使う。</p>
+          </article>
+          <article class="risk">
+            <b>成果・No.1表示の根拠不足</b>
+            <p>売上UP、工数削減、満足度No.1などを根拠なく強く見せる。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="cases" class="wrap">
+        <div class="section-head">
+          <h2>実際に問題になった事例</h2>
+          <p class="section-note">
+            ここでは実名公表された行政事案と、公表裁判例・解説資料をもとに整理する。
+          </p>
+        </div>
+        <div class="cases">
+          <article class="case">
+            <div class="case-header">
+              <h3>Webページ掲載写真の無断利用</h3>
+              <span class="tag red">著作権</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                許諾を受けた小冊子用写真を、別用途である自社Webページの実績紹介に長期間掲載。
+                「引用」とは認められず、著作権侵害が争われた。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                一度もらった素材でも、用途、媒体、期間、二次利用の許諾が別なら使えない。
+                制作実績ページやポートフォリオは特に危ない。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://izawa-law.com/blog/8694.html" target="_blank" rel="noreferrer">
+                東京地裁令和5年5月18日判決の解説
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>RIZAP / chocoZAP 表示問題</h3>
+              <span class="tag gold">景表法</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                サービス内容や広告表示について、消費者庁が景品表示法に基づく措置命令を公表。
+                Webやアプリ上の表示も、広告表現として規制対象になる。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                LPの「簡単」「効果あり」「今だけ」「満足」系表現は、事実確認と根拠資料が必要。
+                デザインで強調した表現ほど責任も重い。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.caa.go.jp/notice/entry/038980/" target="_blank" rel="noreferrer">
+                消費者庁 措置命令
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>大正製薬 ステルスマーケティング表示</h3>
+              <span class="tag gold">ステマ</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                一般消費者が事業者の表示であることを判別しにくい表示として、消費者庁が措置命令を公表。
+                口コミや体験談に見える表示でも、広告なら広告であることを示す必要がある。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                お客様の声、レビュー、SNS引用、インフルエンサー投稿をLPに載せる場合は、
+                依頼・提供・編集の有無を管理する。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.caa.go.jp/notice/entry/039990/" target="_blank" rel="noreferrer">
+                消費者庁 措置命令
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>リクナビ 内定辞退率問題</h3>
+              <span class="tag green">個人情報</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                Web閲覧履歴等をもとに内定辞退率を算出し、本人同意等をめぐって問題化。
+                個人情報保護委員会が勧告を公表した。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                公開情報や行動履歴をAIで推測しただけでも、人に紐づく評価情報になる。
+                営業デモで「御社はこう見えます」と断定すると、相手の信用や情報利益を踏みやすい。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.ppc.go.jp/files/pdf/191204_houdou.pdf" target="_blank" rel="noreferrer">
+                個人情報保護委員会 勧告資料
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>ベネッセ 個人情報漏えい</h3>
+              <span class="tag green">委託管理</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                委託先関係者による大量の個人情報流出が社会問題化。
+                顧客データを扱う委託・制作体制の管理が問われた。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                制作会社、外注、AIツール、共有Driveに顧客リストや実データを渡すときは、
+                持ち出し、再利用、二次利用のルールが必要。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.benesse.co.jp/customer/bcinfo/01.html" target="_blank" rel="noreferrer">
+                ベネッセ 事故概要
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>NTT系 コールセンター情報流出</h3>
+              <span class="tag green">個人データ</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                委託業務で扱う顧客情報が長期間にわたり不正に持ち出されたとして、
+                個人情報保護委員会が行政対応を公表。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                「共有されたから使ってよい」ではない。制作物に入れる前に、
+                アクセス権、用途、保存期間、削除、再委託の管理が必要。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.ppc.go.jp/files/pdf/240124_houdou.pdf" target="_blank" rel="noreferrer">
+                個人情報保護委員会 公表資料
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>7pay 不正アクセスとサービス廃止</h3>
+              <span class="tag">セキュリティ</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                不正アクセス被害を受け、サービス開始から短期間で廃止が発表された。
+                Webサービスの認証・本人確認・リスク設計が事業継続に直結することを示した。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                デモサイトでも、認証、公開範囲、個人情報、問い合わせフォーム、管理画面を軽視しない。
+                外部送付するURLは、見せてよい範囲だけにする。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.7andi.com/company/news/release/201908011500.html" target="_blank" rel="noreferrer">
+                セブン&アイ・ホールディングス 発表
+              </a>
+            </p>
+          </article>
+
+          <article class="case">
+            <div class="case-header">
+              <h3>広告宣伝メールの同意・表示違反</h3>
+              <span class="tag red">営業送付</span>
+            </div>
+            <dl>
+              <dt>何が起きたか</dt>
+              <dd>
+                広告宣伝メールは、原則として事前同意、送信者情報、受信拒否導線などが求められる。
+                違反すれば措置命令や行政対応の対象になる。
+              </dd>
+              <dt>Web制作への教訓</dt>
+              <dd>
+                作ったデモサイトを「勝手に送る」行為は、Web制作ではなく広告配信の問題も生む。
+                送付先、同意、停止リスト、本文表示を管理する。
+              </dd>
+            </dl>
+            <p class="source">
+              出典:
+              <a href="https://www.caa.go.jp/policies/policy/consumer_transaction/specifed_email/pdf/specifed_email_180709_0001.pdf" target="_blank" rel="noreferrer">
+                総務省・消費者庁 特定電子メール法のポイント
+              </a>
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="section-head">
+          <h2>事故はこの順番で起きる</h2>
+          <p class="section-note">
+            たいてい悪意ではなく、確認不足とスピード優先から始まる。
+          </p>
+        </div>
+        <div class="flow">
+          <article class="step">
+            <span>1</span>
+            <h3>拾う</h3>
+            <p>検索、SNS、他社サイト、AI出力から素材や言い回しを持ってくる。</p>
+          </article>
+          <article class="step">
+            <span>2</span>
+            <h3>整える</h3>
+            <p>デザイン上きれいに見せるため、出典や権利関係を消してしまう。</p>
+          </article>
+          <article class="step">
+            <span>3</span>
+            <h3>出す</h3>
+            <p>LP、提案資料、デモURL、SNS、メールで外部に見える状態にする。</p>
+          </article>
+          <article class="step">
+            <span>4</span>
+            <h3>争う</h3>
+            <p>権利者、本人、顧客、行政から削除、説明、損害賠償、再発防止を求められる。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="checklist" class="wrap">
+        <div class="section-head">
+          <h2>送付・公開前チェックリスト</h2>
+          <p class="section-note">
+            全部に答えられないなら、公開や送付を止める。
+          </p>
+        </div>
+        <div class="checklist">
+          <ul>
+            <li>写真、イラスト、動画、文章、コードの入手元と利用許諾を説明できる。</li>
+            <li>素材の用途、媒体、掲載期間、二次利用の範囲が許諾内に収まっている。</li>
+            <li>社名、ロゴ、導入画面、顧客コメント、成果数値の掲載承諾がある。</li>
+            <li>人物写真、社員名、担当者名、個人情報に本人同意または正当な根拠がある。</li>
+            <li>AI生成物が既存作品や競合サイトに過度に似ていないか確認した。</li>
+            <li>口コミ、レビュー、体験談に広告・提供・依頼の関係があれば明示している。</li>
+            <li>No.1、売上UP、工数削減、満足度などの表示に合理的根拠がある。</li>
+            <li>問い合わせフォーム、デモURL、管理画面に不要な個人情報や秘密情報がない。</li>
+            <li>営業メール送付時の同意、送信者情報、配信停止導線、停止リストを管理している。</li>
+            <li>公開後に削除依頼や権利侵害指摘が来た場合の対応窓口を決めている。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sources">
+        <div class="wrap">
+          <h2>法的根拠と参考資料</h2>
+          <p>
+            このページは社内の注意喚起資料であり、個別案件の法的結論ではない。
+            実案件で迷う場合は、公開前に専門家確認を入れる。
+          </p>
+          <ol class="source-list">
+            <li>
+              <a href="https://laws.e-gov.go.jp/law/345AC0000000048" target="_blank" rel="noreferrer">
+                e-Gov 著作権法
+              </a>
+            </li>
+            <li>
+              <a href="https://www.cric.or.jp/qa/hajime/hajime8.html" target="_blank" rel="noreferrer">
+                CRIC 著作物を無断で使うと？
+              </a>
+            </li>
+            <li>
+              <a href="https://www.jpo.go.jp/support/ipr/copyright-kyusai.html" target="_blank" rel="noreferrer">
+                特許庁 著作権侵害への救済手続
+              </a>
+            </li>
+            <li>
+              <a href="https://www.bunka.go.jp/seisaku/chosakuken/aiandcopyright.html" target="_blank" rel="noreferrer">
+                文化庁 AIと著作権について
+              </a>
+            </li>
+            <li>
+              <a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing/" target="_blank" rel="noreferrer">
+                消費者庁 ステルスマーケティング規制
+              </a>
+            </li>
+            <li>
+              <a href="https://www.no-trouble.caa.go.jp/what/mailorder/" target="_blank" rel="noreferrer">
+                消費者庁 特定商取引法ガイド 通信販売
+              </a>
+            </li>
+            <li>
+              <a href="https://www.caa.go.jp/policies/policy/consumer_transaction/specifed_email/pdf/specifed_email_180709_0001.pdf" target="_blank" rel="noreferrer">
+                総務省・消費者庁 特定電子メール法のポイント
+              </a>
+            </li>
+            <li>
+              <a href="https://www.ppc.go.jp/files/pdf/191204_houdou.pdf" target="_blank" rel="noreferrer">
+                個人情報保護委員会 リクナビ事案
+              </a>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        作成日: 2026-07-05 / 目的: Web制作・営業デモ送付前の権利侵害リスク確認 /
+        Hero image source:
+        <a href="https://unsplash.com/" target="_blank" rel="noreferrer">Unsplash</a>
+      </div>
+    </footer>
+  </body>
+</html>
