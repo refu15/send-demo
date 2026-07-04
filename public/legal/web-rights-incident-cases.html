@@ -51,18 +51,18 @@
           url("https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80")
             center / cover;
         color: #fff;
-        min-height: 74vh;
+        min-height: 82vh;
         display: flex;
         align-items: center;
       }
 
       .wrap {
-        width: min(1120px, calc(100% - 40px));
+        width: min(1040px, calc(100% - 64px));
         margin: 0 auto;
       }
 
       .hero-inner {
-        padding: 72px 0 58px;
+        padding: 104px 0 96px;
       }
 
       .eyebrow {
@@ -93,7 +93,7 @@
 
       .lead {
         max-width: 780px;
-        margin: 26px 0 0;
+        margin: 34px 0 0;
         font-size: clamp(17px, 2.1vw, 23px);
         color: #eef2f8;
       }
@@ -101,8 +101,8 @@
       .hero-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 34px;
+        gap: 16px;
+        margin-top: 46px;
       }
 
       .button {
@@ -126,11 +126,11 @@
       }
 
       main {
-        padding: 34px 0 72px;
+        padding: 54px 0 96px;
       }
 
       .summary-band {
-        margin-top: -62px;
+        margin-top: -74px;
         position: relative;
         z-index: 2;
       }
@@ -140,10 +140,10 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         box-shadow: var(--shadow);
-        padding: 24px;
+        padding: 34px;
         display: grid;
         grid-template-columns: 1.2fr 0.8fr;
-        gap: 22px;
+        gap: 32px;
       }
 
       .summary h2,
@@ -156,20 +156,20 @@
 
       .summary p,
       section p {
-        margin: 12px 0 0;
+        margin: 18px 0 0;
         color: var(--muted);
       }
 
       .principles {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+        gap: 14px;
       }
 
       .principle {
         border: 1px solid var(--line);
         border-radius: 6px;
-        padding: 12px;
+        padding: 16px;
         background: #fbfcff;
       }
 
@@ -187,15 +187,15 @@
       }
 
       section {
-        padding: 56px 0 0;
+        padding: 86px 0 0;
       }
 
       .section-head {
         display: flex;
         align-items: end;
         justify-content: space-between;
-        gap: 24px;
-        margin-bottom: 22px;
+        gap: 36px;
+        margin-bottom: 34px;
       }
 
       .section-note {
@@ -208,15 +208,15 @@
       .risk-grid {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
+        gap: 18px;
       }
 
       .risk {
         background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 8px;
-        padding: 16px;
-        min-height: 170px;
+        padding: 22px;
+        min-height: 210px;
       }
 
       .risk b {
@@ -234,14 +234,14 @@
       .cases {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        gap: 24px;
       }
 
       .case {
         background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 8px;
-        padding: 20px;
+        padding: 28px;
       }
 
       .case-header {
@@ -283,25 +283,25 @@
       }
 
       .case dl {
-        margin: 16px 0 0;
+        margin: 22px 0 0;
       }
 
       .case dt {
-        margin-top: 12px;
+        margin-top: 18px;
         color: var(--ink);
         font-weight: 800;
         font-size: 14px;
       }
 
       .case dd {
-        margin: 4px 0 0;
+        margin: 8px 0 0;
         color: var(--muted);
         font-size: 14px;
       }
 
       .case .source {
-        margin-top: 14px;
-        padding-top: 12px;
+        margin-top: 22px;
+        padding-top: 18px;
         border-top: 1px solid var(--line);
         font-size: 13px;
       }
@@ -309,15 +309,15 @@
       .flow {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
+        gap: 20px;
       }
 
       .step {
         background: var(--navy);
         color: #fff;
         border-radius: 8px;
-        padding: 18px;
-        min-height: 160px;
+        padding: 26px;
+        min-height: 190px;
       }
 
       .step span {
@@ -347,13 +347,13 @@
         background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 8px;
-        padding: 22px;
+        padding: 34px;
       }
 
       .checklist ul {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px 18px;
+        gap: 18px 32px;
         padding: 0;
         margin: 0;
         list-style: none;
@@ -379,8 +379,8 @@
       .sources {
         background: #111827;
         color: #eff4fb;
-        padding: 50px 0;
-        margin-top: 64px;
+        padding: 78px 0;
+        margin-top: 92px;
       }
 
       .sources h2 {
@@ -408,7 +408,7 @@
       }
 
       footer {
-        padding: 24px 0 38px;
+        padding: 34px 0 52px;
         color: var(--muted);
         font-size: 13px;
       }
@@ -435,19 +435,25 @@
 
       @media (max-width: 620px) {
         .wrap {
-          width: min(100% - 28px, 1120px);
+          width: min(100% - 40px, 1040px);
         }
 
         .hero {
-          min-height: 82vh;
+          min-height: 88vh;
         }
 
         .hero-inner {
-          padding: 54px 0 84px;
+          padding: 72px 0 110px;
         }
 
         .summary-band {
-          margin-top: -78px;
+          margin-top: -90px;
+        }
+
+        .summary,
+        .case,
+        .checklist {
+          padding: 24px;
         }
 
         .principles,
