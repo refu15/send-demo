@@ -8,6 +8,7 @@ import { DriverView } from "@/components/driver-view";
 import { ExportPanel } from "@/components/export-panel";
 import { MasterManagement } from "@/components/master-management";
 import type { StaffFormInput, UserFormInput, VehicleFormInput } from "@/components/master-management";
+import { OperationsOverview } from "@/components/operations-overview";
 import { PlanSelector } from "@/components/plan-selector";
 import { ResultsTable } from "@/components/results-table";
 import { RidePlanEditor } from "@/components/ride-plan-editor";
@@ -20,7 +21,7 @@ import type { RideEvent, RideImportResult, RidePeriod, RideStop, StaffRole } fro
 
 export default function Home() {
   const [role, setRole] = useState<Role>("admin");
-  const [view, setView] = useState<ViewKey>("masters");
+  const [view, setView] = useState<ViewKey>("operations");
   const [masked, setMasked] = useState(true);
   const [data, setData] = useState<RideImportResult>(() => createEmptyRideData());
   const [loading, setLoading] = useState(true);
@@ -213,7 +214,7 @@ export default function Home() {
         } else if (nextRole === "facility") {
           setView("progress");
         } else {
-          setView("dashboard");
+          setView("operations");
         }
       }}
       onViewChange={setView}
@@ -223,6 +224,23 @@ export default function Home() {
       {errorMessage ? <div className="notice">{errorMessage}</div> : null}
       {["plan", "driver", "progress", "results", "export"].includes(view) ? (
         <PlanSelector data={data} selectedPlanId={activePlan?.id} onSelectPlan={setSelectedPlanId} />
+      ) : null}
+      {view === "operations" ? (
+        <OperationsOverview
+          data={data}
+          onGoToPlan={() => setView("plan")}
+          onGoToDriver={() => {
+            setRole("driver");
+            setView("driver");
+          }}
+          onGoToProgress={() => {
+            setRole("facility");
+            setView("progress");
+          }}
+          onGoToResults={() => setView("results")}
+          onGoToExport={() => setView("export")}
+          onGoToSimulation={() => setView("simulation")}
+        />
       ) : null}
       {view === "simulation" ? (
         <SimulationPanel

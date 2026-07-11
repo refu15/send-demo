@@ -8,11 +8,13 @@ import {
   PlayCircle,
   Route,
   Users,
+  ClipboardCheck,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
 export type Role = "admin" | "facility" | "driver";
 export type ViewKey =
+  | "operations"
   | "dashboard"
   | "masters"
   | "planner"
@@ -24,6 +26,7 @@ export type ViewKey =
   | "export";
 
 const views: Array<{ key: ViewKey; label: string; icon: ReactNode }> = [
+  { key: "operations", label: "今日の運行", icon: <ClipboardCheck size={16} /> },
   { key: "simulation", label: "現場シミュレーション", icon: <PlayCircle size={16} /> },
   { key: "dashboard", label: "ダッシュボード", icon: <LayoutDashboard size={16} /> },
   { key: "masters", label: "マスタ", icon: <Users size={16} /> },
@@ -72,7 +75,7 @@ export function AppShell({
             <div>
               <h1 className="brand">送迎レーン</h1>
               <div className="subtle">
-                アプリ内データを正として、計画・運行・実績を一元管理。Excelは初期移行と出力に限定します。
+                今日の準備、運行、進捗、実績を順番に確認できます。
               </div>
             </div>
             <label className="subtle">

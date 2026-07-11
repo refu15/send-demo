@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, LogIn, LogOut, Phone, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, ClipboardCheck, LogIn, LogOut, RotateCcw } from "lucide-react";
 import { StatusBadge } from "@/components/status-badge";
 import { maskAddress, maskName, maskPhone } from "@/lib/privacy/mask";
 import type { RideEvent, RideImportResult, RidePlan, RideStop } from "@/lib/ride/types";
@@ -66,40 +66,40 @@ export function DriverView({ plan, stops, data, masked, onEvent, onUndo }: Drive
         </div>
         <div className="driver-actions">
           <button
-            className="primary-button"
+            className="primary-button driver-action-button"
             type="button"
             disabled={nextStop.status !== "planned"}
             onClick={() => onEvent(nextStop, "arrive")}
           >
-            <LogIn size={18} /> 到着
+            <LogIn size={22} /> 到着した
           </button>
           <button
-            className="primary-button"
+            className="primary-button driver-action-button"
             type="button"
             disabled={nextStop.status !== "arrived"}
             onClick={() => onEvent(nextStop, "board")}
           >
-            <Check size={18} /> 乗車/降車
+            <Check size={22} /> 乗った / 降りた
           </button>
           <button
-            className="primary-button"
+            className="primary-button driver-action-button"
             type="button"
             disabled={nextStop.status !== "boarded"}
             onClick={() => onEvent(nextStop, "depart")}
           >
-            <LogOut size={18} /> 出発
+            <LogOut size={22} /> 出発する
           </button>
           <button
-            className="primary-button"
+            className="primary-button driver-action-button"
             type="button"
             disabled={nextStop.status !== "departed"}
             onClick={() => onEvent(nextStop, "complete")}
           >
-            <Check size={18} /> 完了
+            <Check size={22} /> 完了した
           </button>
           <div className="summary-row">
             <button className="secondary-button" type="button">
-              <Phone size={16} /> 電話
+              <ClipboardCheck size={16} /> 連絡先確認
             </button>
             <button className="secondary-button" type="button" disabled={nextStop.events.length === 0} onClick={() => onUndo(nextStop)}>
               <RotateCcw size={16} /> 直前取消

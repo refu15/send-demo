@@ -62,6 +62,16 @@ export function DemoPasswordGate({ children }: DemoPasswordGateProps) {
           <h1 id="password-title">送迎支援デモ</h1>
           <p>共有されたデモ用パスワードを入力してください。</p>
         </div>
+        <input
+          className="credential-helper"
+          type="text"
+          name="username"
+          autoComplete="username"
+          value="demo"
+          readOnly
+          tabIndex={-1}
+          aria-hidden="true"
+        />
         <label className="password-field">
           パスワード
           <input
