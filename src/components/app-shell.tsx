@@ -38,27 +38,37 @@ const views: Array<{ key: ViewKey; label: string; icon: ReactNode }> = [
   { key: "export", label: "Excel出力", icon: <Download size={16} /> },
 ];
 
-const roles: Array<{ key: Role; label: string }> = [
-  { key: "admin", label: "管理者" },
-  { key: "facility", label: "施設職員" },
-  { key: "driver", label: "ドライバー" },
-];
+const roleTabsByRole: Record<Role, Array<{ key: Role; label: string }>> = {
+  admin: [
+    { key: "admin", label: "管理者" },
+    { key: "facility", label: "施設職員" },
+    { key: "driver", label: "ドライバー" },
+  ],
+  facility: [
+    { key: "facility", label: "施設職員" },
+    { key: "driver", label: "ドライバー" },
+  ],
+  driver: [{ key: "driver", label: "ドライバー" }],
+};
 
-const roleProfiles: Record<Role, { title: string; description: string; nav: ViewKey[] }> = {
+export const viewsByRole: Record<Role, ViewKey[]> = {
+  admin: ["operations", "simulation", "dashboard", "masters", "planner", "plan", "driver", "progress", "results", "export"],
+  facility: ["progress", "results", "export"],
+  driver: ["driver"],
+};
+
+const roleProfiles: Record<Role, { title: string; description: string }> = {
   admin: {
     title: "送迎レーン 管理者",
     description: "配車、現場状況、実績、出力まで全体を管理します。",
-    nav: ["operations", "simulation", "dashboard", "masters", "planner", "plan", "driver", "progress", "results", "export"],
   },
   facility: {
     title: "施設 進捗モニター",
     description: "到着待ち、送迎中、キャンセルを施設側で確認します。",
-    nav: ["progress", "results", "export", "operations"],
   },
   driver: {
     title: "ドライバー",
     description: "停車中に次の1件だけを記録します。",
-    nav: ["driver", "progress", "results"],
   },
 };
 
@@ -86,7 +96,8 @@ export function AppShell({
   onMaskedChange,
 }: AppShellProps) {
   const profile = roleProfiles[role];
-  const visibleViews = views.filter((item) => profile.nav.includes(item.key));
+  const visibleViews = views.filter((item) => viewsByRole[role].includes(item.key));
+  const visibleRoles = roleTabsByRole[role];
 
   return (
     <div className={`app role-${role}`}>
@@ -108,7 +119,7 @@ export function AppShell({
           </div>
           <div className="meta-row">
             <ul className="role-list" aria-label="ロール切替">
-              {roles.map((item) => (
+              {visibleRoles.map((item) => (
                 <li key={item.key}>
                   <button
                     type="button"
