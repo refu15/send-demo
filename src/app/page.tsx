@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AppShell, type Role, type ViewKey } from "@/components/app-shell";
+import { AppShell, type Role } from "@/components/app-shell";
 import { Dashboard } from "@/components/dashboard";
 import { DemoPasswordGate } from "@/components/demo-password-gate";
 import { DriverView } from "@/components/driver-view";
 import { ExportPanel } from "@/components/export-panel";
 import { MasterManagement } from "@/components/master-management";
-import type { StaffFormInput, UserFormInput, VehicleFormInput } from "@/components/master-management";
-import { OperationsOverview } from "@/components/operations-overview";
+import type {
+  StaffFormInput,
+  UserFormInput,
+  VehicleFormInput,
+} from "@/components/master-management";
 import { PlanSelector } from "@/components/plan-selector";
 import { ResultsTable } from "@/components/results-table";
 import { RidePlanEditor } from "@/components/ride-plan-editor";
@@ -18,30 +21,9 @@ import { deleteRideData, fetchRideData, patchRideData, postRideData } from "@/li
 import { createEmptyRideData } from "@/lib/ride/app-state";
 import { applyRideEvent, undoLastRideEvent } from "@/lib/ride/status";
 import type { RideEvent, RideImportResult, RidePeriod, RideStop, StaffRole } from "@/lib/ride/types";
-import { viewsByRole } from "@/components/app-shell";
-
-const roleByView: Partial<Record<ViewKey, Role>> = {
-  operations: "admin",
-  simulation: "admin",
-  dashboard: "admin",
-  masters: "admin",
-  planner: "admin",
-  plan: "admin",
-  export: "admin",
-  progress: "facility",
-  results: "facility",
-  driver: "driver",
-};
-
-const defaultViewByRole: Record<Role, ViewKey> = {
-  admin: "operations",
-  facility: "progress",
-  driver: "driver",
-};
 
 export default function Home() {
   const [role, setRole] = useState<Role>("admin");
-  const [view, setView] = useState<ViewKey>("operations");
   const [masked, setMasked] = useState(true);
   const [data, setData] = useState<RideImportResult>(() => createEmptyRideData());
   const [loading, setLoading] = useState(true);
@@ -63,13 +45,6 @@ export default function Home() {
     }
   }, [data.ridePlans, selectedPlanId]);
 
-  useEffect(() => {
-    const allowedViews = viewsByRole[role];
-    if (!allowedViews.includes(view)) {
-      setView(defaultViewByRole[role]);
-    }
-  }, [role, view]);
-
   const activePlan = data.ridePlans.find((plan) => plan.id === selectedPlanId) ?? data.ridePlans[0];
   const activeStops = useMemo(
     () =>
@@ -86,7 +61,7 @@ export default function Home() {
       setErrorMessage(undefined);
       setData(await fetchRideData());
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "データ読み込みに失敗しました");
+      setErrorMessage(error instanceof Error ? error.message : "データの読み込みに失敗しました");
     } finally {
       setLoading(false);
     }
@@ -155,19 +130,19 @@ export default function Home() {
   }
 
   function handleDeleteUser(id: string, name: string) {
-    if (window.confirm(`${name} を削除しますか？`)) {
+    if (window.confirm(`${name} を削除しますか。`)) {
       void applyDataChange(() => deleteRideData(`/api/users/${id}`));
     }
   }
 
   function handleDeleteVehicle(id: string, name: string) {
-    if (window.confirm(`${name} を削除しますか？`)) {
+    if (window.confirm(`${name} を削除しますか。`)) {
       void applyDataChange(() => deleteRideData(`/api/vehicles/${id}`));
     }
   }
 
   function handleDeleteStaff(id: string, name: string) {
-    if (window.confirm(`${name} を削除しますか？`)) {
+    if (window.confirm(`${name} を削除しますか。`)) {
       void applyDataChange(() => deleteRideData(`/api/staff/${id}`));
     }
   }
@@ -182,7 +157,6 @@ export default function Home() {
     weather?: string;
   }) {
     void applyDataChange(() => postRideData("/api/ride-plans", input));
-    handleViewChange("planner");
   }
 
   function handleAddStop(input: {
@@ -192,7 +166,6 @@ export default function Home() {
     note?: string;
   }) {
     void applyDataChange(() => postRideData("/api/ride-stops", input));
-    handleViewChange("plan");
   }
 
   async function applyDataChange(updater: () => Promise<RideImportResult>) {
@@ -207,7 +180,7 @@ export default function Home() {
   }
 
   async function handleLoadSimulation() {
-    if (!window.confirm("現場シミュレーション用データでDBを置き換えます。続けますか？")) {
+    if (!window.confirm("デモ用の標準シナリオを読み込みます。よろしいですか。")) {
       return;
     }
     setSimulationBusy(true);
@@ -219,133 +192,196 @@ export default function Home() {
   }
 
   async function handleClearDemoData() {
-    if (!window.confirm("デモDBを空にします。続けますか？")) {
+    if (!window.confirm("デモデータを消去します。よろしいですか。")) {
       return;
     }
     await applyDataChange(() => postRideData("/api/simulation/clear", {}));
-    handleViewChange("simulation");
   }
 
   function handleRoleChange(nextRole: Role) {
     setRole(nextRole);
-    setView(defaultViewByRole[nextRole]);
-  }
-
-  function handleViewChange(nextView: ViewKey) {
-    const nextRole = roleByView[nextView];
-    if (nextRole) {
-      setRole(nextRole);
-    }
-    setView(nextView);
   }
 
   return (
     <DemoPasswordGate role={role} onRoleChange={handleRoleChange}>
       <AppShell
         role={role}
-        view={view}
         masked={masked}
         serviceDate={data.serviceDate}
         weather={data.weather}
-        onRoleChange={handleRoleChange}
-        onViewChange={handleViewChange}
         onMaskedChange={setMasked}
       >
-        {loading ? <div className="empty">DBから読み込み中です。</div> : null}
+        {loading ? <div className="empty">データを読み込み中です。</div> : null}
         {errorMessage ? <div className="notice">{errorMessage}</div> : null}
-        {["plan", "driver", "progress", "results", "export"].includes(view) ? (
-          <PlanSelector data={data} selectedPlanId={activePlan?.id} onSelectPlan={setSelectedPlanId} />
-        ) : null}
-        {view === "operations" ? (
-          <OperationsOverview
+        {role === "admin" ? (
+          <AdminWorkspace
             data={data}
-            onGoToPlan={() => handleViewChange("plan")}
-            onGoToDriver={() => {
-              handleRoleChange("driver");
-            }}
-            onGoToProgress={() => {
-              handleRoleChange("facility");
-            }}
-            onGoToResults={() => handleViewChange("results")}
-            onGoToExport={() => handleViewChange("export")}
-            onGoToSimulation={() => handleViewChange("simulation")}
-          />
-        ) : null}
-        {view === "simulation" ? (
-          <SimulationPanel
-            data={data}
-            busy={simulationBusy}
-            onLoadScenario={handleLoadSimulation}
-            onClearData={() => void handleClearDemoData()}
-            onGoToPlan={() => handleViewChange("plan")}
-            onGoToDriver={() => {
-              handleRoleChange("driver");
-            }}
-            onGoToProgress={() => {
-              handleRoleChange("facility");
-            }}
-            onGoToResults={() => handleViewChange("results")}
-          />
-        ) : null}
-        {view === "masters" ? (
-          <MasterManagement
-            data={data}
+            masked={masked}
+            selectedPlanId={selectedPlanId}
+            onSelectPlan={setSelectedPlanId}
+            activePlanId={activePlan?.id}
+            onLoadSimulation={handleLoadSimulation}
+            onClearDemoData={handleClearDemoData}
+            simulationBusy={simulationBusy}
             onAddUser={handleAddUser}
             onAddVehicle={handleAddVehicle}
             onAddStaff={handleAddStaff}
             onUpdateUser={handleUpdateUser}
             onUpdateVehicle={handleUpdateVehicle}
             onUpdateStaff={handleUpdateStaff}
-            onDeleteUser={(user) => handleDeleteUser(user.id, user.name)}
-            onDeleteVehicle={(vehicle) => handleDeleteVehicle(vehicle.id, vehicle.name)}
-            onDeleteStaff={(staff) => handleDeleteStaff(staff.id, staff.name)}
-          />
-        ) : null}
-        {view === "planner" ? (
-          <RidePlanEditor
-            data={data}
+            onDeleteUser={handleDeleteUser}
+            onDeleteVehicle={handleDeleteVehicle}
+            onDeleteStaff={handleDeleteStaff}
             onCreatePlan={handleCreatePlan}
             onAddStop={handleAddStop}
+            onSkip={(stop) => handleRideEvent(stop, "skip", "キャンセル")}
+            onUpdateStop={(stop) => void updateStop(stop)}
+            onMoveStop={(stop, direction) => void moveStop(stop, direction)}
+            onDeleteStop={(stop) => void deleteStop(stop)}
           />
         ) : null}
-        {view === "export" ? (
-          <ExportPanel data={data} />
-        ) : null}
-        {view === "dashboard" || view === "progress" ? (
-          <Dashboard
+        {role === "facility" ? <Dashboard data={data} masked={masked} /> : null}
+        {role === "driver" ? (
+          <DriverWorkspace
             data={data}
             masked={masked}
-            readonly={view === "progress"}
-            onNavigateToDriver={() => {
-              handleRoleChange("driver");
-            }}
-          />
-        ) : null}
-        {view === "plan" ? (
-          <RideStopTable
-            data={data}
-            masked={masked}
-            selectedPlanId={activePlan?.id}
-            onSkip={(stop) => handleRideEvent(stop, "skip", "デモ操作でキャンセル")}
-            onUpdate={(stop) => void updateStop(stop)}
-            onMove={(stop, direction) => void moveStop(stop, direction)}
-            onDelete={(stop) => void deleteStop(stop)}
-          />
-        ) : null}
-        {view === "driver" ? (
-          <DriverView
-            plan={activePlan}
-            stops={activeStops}
-            data={data}
-            masked={masked}
+            selectedPlanId={selectedPlanId}
+            onSelectPlan={setSelectedPlanId}
+            activePlanId={activePlan?.id}
+            activeStops={activeStops}
             onEvent={handleRideEvent}
             onUndo={handleUndo}
           />
         ) : null}
-        {view === "results" ? (
-          <ResultsTable data={data} masked={masked} />
-        ) : null}
       </AppShell>
     </DemoPasswordGate>
+  );
+}
+
+function AdminWorkspace({
+  data,
+  masked,
+  selectedPlanId,
+  onSelectPlan,
+  activePlanId,
+  onLoadSimulation,
+  onClearDemoData,
+  simulationBusy,
+  onAddUser,
+  onAddVehicle,
+  onAddStaff,
+  onUpdateUser,
+  onUpdateVehicle,
+  onUpdateStaff,
+  onDeleteUser,
+  onDeleteVehicle,
+  onDeleteStaff,
+  onCreatePlan,
+  onAddStop,
+  onSkip,
+  onUpdateStop,
+  onMoveStop,
+  onDeleteStop,
+}: {
+  data: RideImportResult;
+  masked: boolean;
+  selectedPlanId?: string;
+  onSelectPlan: (planId: string) => void;
+  activePlanId?: string;
+  onLoadSimulation: () => void;
+  onClearDemoData: () => void;
+  simulationBusy: boolean;
+  onAddUser: (input: UserFormInput) => void;
+  onAddVehicle: (input: VehicleFormInput) => void;
+  onAddStaff: (input: StaffFormInput) => void;
+  onUpdateUser: (id: string, input: UserFormInput) => void;
+  onUpdateVehicle: (id: string, input: VehicleFormInput) => void;
+  onUpdateStaff: (id: string, input: StaffFormInput) => void;
+  onDeleteUser: (id: string, name: string) => void;
+  onDeleteVehicle: (id: string, name: string) => void;
+  onDeleteStaff: (id: string, name: string) => void;
+  onCreatePlan: (input: {
+    serviceDate?: string;
+    weekday?: string;
+    period: RidePeriod;
+    vehicleId?: string;
+    driverId?: string;
+    attendantId?: string;
+    weather?: string;
+  }) => void;
+  onAddStop: (input: { ridePlanId: string; userId: string; scheduledTime?: string; note?: string }) => void;
+  onSkip: (stop: RideStop) => void;
+  onUpdateStop: (stop: RideStop) => void;
+  onMoveStop: (stop: RideStop, direction: "up" | "down") => void;
+  onDeleteStop: (stop: RideStop) => void;
+}) {
+  return (
+    <>
+      <SimulationPanel
+        data={data}
+        busy={simulationBusy}
+        onLoadScenario={onLoadSimulation}
+        onClearData={onClearDemoData}
+      />
+      <PlanSelector data={data} selectedPlanId={selectedPlanId} onSelectPlan={onSelectPlan} />
+      <MasterManagement
+        data={data}
+        onAddUser={onAddUser}
+        onAddVehicle={onAddVehicle}
+        onAddStaff={onAddStaff}
+        onUpdateUser={onUpdateUser}
+        onUpdateVehicle={onUpdateVehicle}
+        onUpdateStaff={onUpdateStaff}
+        onDeleteUser={(user) => onDeleteUser(user.id, user.name)}
+        onDeleteVehicle={(vehicle) => onDeleteVehicle(vehicle.id, vehicle.name)}
+        onDeleteStaff={(staff) => onDeleteStaff(staff.id, staff.name)}
+      />
+      <RidePlanEditor data={data} onCreatePlan={onCreatePlan} onAddStop={onAddStop} />
+      <RideStopTable
+        data={data}
+        masked={masked}
+        selectedPlanId={activePlanId}
+        onSkip={onSkip}
+        onUpdate={onUpdateStop}
+        onMove={onMoveStop}
+        onDelete={onDeleteStop}
+      />
+      <ResultsTable data={data} masked={masked} />
+      <ExportPanel data={data} />
+    </>
+  );
+}
+
+function DriverWorkspace({
+  data,
+  masked,
+  selectedPlanId,
+  onSelectPlan,
+  activePlanId,
+  activeStops,
+  onEvent,
+  onUndo,
+}: {
+  data: RideImportResult;
+  masked: boolean;
+  selectedPlanId?: string;
+  onSelectPlan: (planId: string) => void;
+  activePlanId?: string;
+  activeStops: RideStop[];
+  onEvent: (stop: RideStop, eventType: RideEvent["eventType"], note?: string) => void;
+  onUndo: (stop: RideStop) => void;
+}) {
+  return (
+    <>
+      <PlanSelector data={data} selectedPlanId={selectedPlanId} onSelectPlan={onSelectPlan} />
+      <DriverView
+        plan={data.ridePlans.find((plan) => plan.id === activePlanId)}
+        stops={activeStops}
+        data={data}
+        masked={masked}
+        onEvent={onEvent}
+        onUndo={onUndo}
+      />
+    </>
   );
 }
