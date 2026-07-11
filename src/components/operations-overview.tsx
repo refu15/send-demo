@@ -64,6 +64,9 @@ export function OperationsOverview({
             <span>次に見るところ</span>
             <strong>{nextStop ? `${nextStop.scheduledTime ?? "--:--"} ${nextVehicle?.name ?? "車両未設定"}` : "全便完了"}</strong>
             <small>{nextStop ? "ドライバー画面で次の訪問先を確認します。" : "実績画面で結果を確認します。"}</small>
+            <button className="primary-button operation-start-button" type="button" onClick={nextStop ? onGoToDriver : onGoToResults}>
+              {nextStop ? "このまま運行を始める" : "実績を確認する"}
+            </button>
           </div>
         </div>
       </div>

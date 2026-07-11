@@ -376,6 +376,11 @@ td select {
   line-height: 30px;
 }
 
+.operation-start-button {
+  min-height: 56px;
+  margin-top: 8px;
+}
+
 .operation-metrics {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -631,6 +636,25 @@ th {
   line-height: 28px;
 }
 
+.driver-contact-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid var(--color-lane);
+  border-radius: 8px;
+  background: #e7f0eb;
+}
+
+.driver-contact-panel div {
+  display: grid;
+  gap: 4px;
+}
+
+.driver-contact-panel strong {
+  font-size: 20px;
+  line-height: 30px;
+}
+
 .notice {
   display: flex;
   align-items: flex-start;
@@ -812,12 +836,22 @@ th {
     font-size: 17px;
   }
 
+  .operation-start-button {
+    min-height: 64px;
+    font-size: 18px;
+  }
+
   .driver-card {
     max-width: none;
   }
 
   .driver-action-button {
     min-height: 74px;
+  }
+
+  .driver-contact-panel strong {
+    font-size: 22px;
+    line-height: 32px;
   }
 
   .simulation-grid {
