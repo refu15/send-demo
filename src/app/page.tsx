@@ -23,7 +23,13 @@ import { applyRideEvent, undoLastRideEvent } from "@/lib/ride/status";
 import type { RideEvent, RideImportResult, RidePeriod, RideStop, StaffRole } from "@/lib/ride/types";
 
 export default function Home() {
-  const [role, setRole] = useState<Role>("admin");
+  const [role, setRole] = useState<Role>(() => {
+    if (typeof window === "undefined") {
+      return "admin";
+    }
+    const savedRole = sessionStorage.getItem("demo-role");
+    return savedRole === "admin" || savedRole === "facility" || savedRole === "driver" ? savedRole : "admin";
+  });
   const [masked, setMasked] = useState(true);
   const [data, setData] = useState<RideImportResult>(() => createEmptyRideData());
   const [loading, setLoading] = useState(true);
@@ -200,6 +206,7 @@ export default function Home() {
 
   function handleRoleChange(nextRole: Role) {
     setRole(nextRole);
+    sessionStorage.setItem("demo-role", nextRole);
   }
 
   return (
