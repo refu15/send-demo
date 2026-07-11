@@ -44,6 +44,24 @@ const roles: Array<{ key: Role; label: string }> = [
   { key: "driver", label: "ドライバー" },
 ];
 
+const roleProfiles: Record<Role, { title: string; description: string; nav: ViewKey[] }> = {
+  admin: {
+    title: "送迎レーン 管理者",
+    description: "配車、現場状況、実績、出力まで全体を管理します。",
+    nav: ["operations", "simulation", "dashboard", "masters", "planner", "plan", "driver", "progress", "results", "export"],
+  },
+  facility: {
+    title: "施設 進捗モニター",
+    description: "到着待ち、送迎中、キャンセルを施設側で確認します。",
+    nav: ["progress", "results", "export", "operations"],
+  },
+  driver: {
+    title: "ドライバー",
+    description: "停車中に次の1件だけを記録します。",
+    nav: ["driver", "progress", "results"],
+  },
+};
+
 type AppShellProps = {
   role: Role;
   view: ViewKey;
@@ -67,16 +85,17 @@ export function AppShell({
   onViewChange,
   onMaskedChange,
 }: AppShellProps) {
+  const profile = roleProfiles[role];
+  const visibleViews = views.filter((item) => profile.nav.includes(item.key));
+
   return (
-    <div className="app">
+    <div className={`app role-${role}`}>
       <header className="app-header">
         <div className="header-inner">
           <div className="brand-row">
             <div>
-              <h1 className="brand">送迎レーン</h1>
-              <div className="subtle">
-                今日の準備、運行、進捗、実績を順番に確認できます。
-              </div>
+              <h1 className="brand">{profile.title}</h1>
+              <div className="subtle">{profile.description}</div>
             </div>
             <label className="subtle">
               <input
@@ -109,7 +128,7 @@ export function AppShell({
           </div>
           <nav className="nav-row" aria-label="メインナビゲーション">
             <ul className="nav-list">
-              {views.map((item) => (
+              {visibleViews.map((item) => (
                 <li key={item.key}>
                   <button
                     type="button"
@@ -123,6 +142,11 @@ export function AppShell({
               ))}
             </ul>
           </nav>
+          {role === "driver" ? (
+            <div className="driver-shell-hint" role="status">
+              停車してから操作してください
+            </div>
+          ) : null}
         </div>
       </header>
       <main className="main">{children}</main>

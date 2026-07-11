@@ -49,6 +49,19 @@ textarea:focus-visible {
   min-height: 100vh;
 }
 
+.role-admin {
+  --role-accent: var(--color-lane);
+}
+
+.role-facility {
+  --role-accent: var(--color-action);
+}
+
+.role-driver {
+  --role-accent: #1f4f46;
+  background: #eef1ed;
+}
+
 .app-header {
   position: sticky;
   top: 0;
@@ -110,6 +123,14 @@ textarea:focus-visible {
 }
 
 .nav-button,
+.secondary-button,
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-button,
 .role-button,
 .secondary-button,
 .danger-button {
@@ -156,6 +177,81 @@ textarea:focus-visible {
   width: min(1280px, 100%);
   margin: 0 auto;
   padding: 24px;
+}
+
+.role-facility .main {
+  width: min(1440px, 100%);
+}
+
+.role-driver .app-header {
+  position: static;
+  border-bottom: 0;
+  background: #eef1ed;
+  backdrop-filter: none;
+}
+
+.role-driver .header-inner {
+  width: min(520px, 100%);
+  margin: 0 auto;
+  padding: 12px;
+  gap: 8px;
+}
+
+.role-driver .brand {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.role-driver .brand-row label {
+  display: none;
+}
+
+.role-driver .meta-row {
+  align-items: stretch;
+}
+
+.role-driver .role-list,
+.role-driver .nav-list {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.role-driver .role-button,
+.role-driver .nav-button {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 6px;
+}
+
+.role-driver .nav-button {
+  justify-content: center;
+}
+
+.driver-shell-hint {
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid rgba(154, 90, 0, 0.32);
+  border-radius: 8px;
+  background: #fff7e6;
+  color: #4f3000;
+  font-weight: 700;
+  text-align: center;
+}
+
+.role-driver .main {
+  width: min(520px, 100%);
+  padding: 0 12px 24px;
+}
+
+.role-driver .plan-selector {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-surface);
 }
 
 .section {
@@ -459,7 +555,7 @@ td select {
   display: grid;
   grid-template-columns: minmax(220px, 0.32fr) minmax(0, 1fr);
   gap: 16px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .operation-attention h3,
@@ -501,6 +597,118 @@ td select {
   display: block;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 24px;
+}
+
+.facility-board {
+  gap: 14px;
+}
+
+.facility-hero {
+  border-color: rgba(30, 108, 158, 0.28);
+}
+
+.facility-metrics {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1.2fr;
+  gap: 10px;
+}
+
+.facility-metrics .metric {
+  min-height: 96px;
+  background: #f5f9fb;
+}
+
+.facility-metrics .metric strong {
+  font-size: 36px;
+  line-height: 44px;
+}
+
+.facility-route-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.facility-route-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.facility-route-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.facility-route-head h3,
+.facility-route-head p {
+  margin: 0;
+}
+
+.facility-route-head strong {
+  min-width: 86px;
+  height: fit-content;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #e7f0eb;
+  color: var(--color-lane);
+  text-align: center;
+}
+
+.facility-next {
+  display: grid;
+  gap: 4px;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid rgba(30, 108, 158, 0.22);
+  border-radius: 8px;
+  background: #f5f9fb;
+}
+
+.facility-next span,
+.facility-next small {
+  color: var(--color-muted);
+}
+
+.facility-next strong {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.facility-progress {
+  width: 100%;
+  height: 16px;
+}
+
+.facility-progress::-webkit-meter-bar {
+  border: 0;
+  border-radius: 999px;
+  background: #ece8dd;
+}
+
+.facility-progress::-webkit-meter-optimum-value {
+  border-radius: 999px;
+  background: var(--color-action);
+}
+
+.facility-progress::-moz-meter-bar {
+  border-radius: 999px;
+  background: var(--color-action);
+}
+
+.facility-route-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.facility-route-stats .metric {
+  min-width: 0;
+  padding: 10px;
 }
 
 .lane {
@@ -613,6 +821,124 @@ th {
   margin: 0 auto;
 }
 
+.driver-phone {
+  display: grid;
+  gap: 12px;
+}
+
+.driver-status-strip {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #1f4f46;
+  color: #fff;
+}
+
+.driver-status-strip span:last-child {
+  text-align: right;
+}
+
+.driver-next-card,
+.driver-primary-panel,
+.driver-step-panel,
+.driver-list-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.driver-next-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.driver-next-head h2,
+.driver-primary-panel p,
+.driver-step-panel h3,
+.driver-list-panel h3 {
+  margin: 0;
+}
+
+.driver-next-head h2 {
+  font-size: 34px;
+  line-height: 42px;
+}
+
+.driver-stop-detail {
+  display: grid;
+  gap: 8px;
+}
+
+.driver-stop-detail div {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 17px;
+  line-height: 26px;
+}
+
+.driver-note {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-left: 4px solid var(--color-warning);
+  background: #fff7e6;
+}
+
+.driver-primary-panel {
+  border: 2px solid #1f4f46;
+}
+
+.driver-main-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 92px;
+  border-color: #1f4f46;
+  background: #1f4f46;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.driver-complete-message {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #e9f4ec;
+  color: var(--color-complete);
+  font-weight: 700;
+}
+
+.driver-sub-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.driver-sub-actions .secondary-button,
+.driver-sub-actions .danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 52px;
+  padding: 8px 6px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
 .next-stop {
   display: grid;
   gap: 10px;
@@ -627,13 +953,28 @@ th {
 
 .driver-actions {
   display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
 .driver-action-button {
-  min-height: 68px;
-  font-size: 20px;
-  line-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 58px;
+  padding: 8px 6px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #f8faf8;
+  color: var(--color-ink);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.driver-action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .driver-contact-panel {
@@ -653,6 +994,46 @@ th {
 .driver-contact-panel strong {
   font-size: 20px;
   line-height: 30px;
+}
+
+.driver-list-panel ol {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.driver-list-panel li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+}
+
+.driver-list-panel li[aria-current="step"] {
+  border-color: #1f4f46;
+  background: #e7f0eb;
+}
+
+.driver-list-panel li span {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #1f4f46;
+  color: #fff;
+  font-weight: 700;
+}
+
+.driver-list-panel li small {
+  color: var(--color-muted);
+  font-weight: 700;
 }
 
 .notice {
@@ -869,7 +1250,10 @@ th {
 
   .operation-metrics,
   .operation-grid,
-  .attention-list {
+  .attention-list,
+  .facility-metrics,
+  .facility-route-grid,
+  .facility-route-stats {
     grid-template-columns: 1fr;
   }
 
@@ -891,8 +1275,20 @@ th {
     max-width: none;
   }
 
+  .driver-next-head h2 {
+    font-size: 30px;
+    line-height: 38px;
+  }
+
+  .driver-main-action {
+    min-height: 96px;
+    font-size: 26px;
+    line-height: 34px;
+  }
+
   .driver-action-button {
-    min-height: 74px;
+    min-height: 62px;
+    font-size: 14px;
   }
 
   .driver-contact-panel strong {

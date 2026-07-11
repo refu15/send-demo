@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, Check, ClipboardCheck, LogIn, LogOut, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, ClipboardCheck, LogIn, LogOut, MapPin, Phone, RotateCcw } from "lucide-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { StatusBadge } from "@/components/status-badge";
 import { maskAddress, maskName, maskPhone } from "@/lib/privacy/mask";
@@ -41,103 +42,166 @@ export function DriverView({ plan, stops, data, masked, onEvent, onUndo }: Drive
   const displayName = masked ? maskName(user?.name ?? "", userIndex) : user?.name;
   const displayAddress = masked ? maskAddress(nextStop.address) : nextStop.address;
   const displayPhone = masked ? maskPhone(nextStop.phone) : nextStop.phone;
+  const primaryAction = getPrimaryAction(nextStop.status);
+  const remainingStops = stops.filter((stop) => !["completed", "skipped"].includes(stop.status));
 
   return (
-    <section className="driver-card panel" aria-labelledby="driver-title">
-      <div className="panel-body next-stop">
-        <div>
-          <h2 id="driver-title">ドライバー画面</h2>
-          <p className="subtle">
-            {plan.period}便 / 残り {remaining}名。操作は停車中に行ってください。
-          </p>
-        </div>
-        <div className="notice">運転中の画面操作は行わないでください。</div>
-        <div>
-          <div className="subtle">次の訪問先</div>
-          <div className="next-stop-time">{nextStop.scheduledTime ?? "--:--"}</div>
-          <h3>{displayName}</h3>
+    <section className="driver-phone" aria-labelledby="driver-title">
+      <div className="driver-status-strip">
+        <span>{plan.period}便</span>
+        <strong>残り {remaining}名</strong>
+        <span>{nextStop.scheduledTime ?? "--:--"}</span>
+      </div>
+
+      <div className="driver-next-card">
+        <div className="driver-next-head">
+          <div>
+            <div className="subtle">次の訪問先</div>
+            <h2 id="driver-title">{displayName}</h2>
+          </div>
           <StatusBadge status={nextStop.status} />
         </div>
-        <div className="grid">
+        <div className="driver-stop-detail">
           <div>
-            <strong>住所</strong>
-            <div>{displayAddress}</div>
+            <MapPin size={20} aria-hidden="true" />
+            <span>{displayAddress || "住所未登録"}</span>
           </div>
           <div>
-            <strong>電話</strong>
-            <div>{displayPhone}</div>
-          </div>
-          <div>
-            <strong>備考</strong>
-            <div>{nextStop.note || "なし"}</div>
+            <Phone size={20} aria-hidden="true" />
+            <span>{displayPhone || "電話未登録"}</span>
           </div>
         </div>
+        <div className="driver-note">
+          <strong>注意</strong>
+          <span>{nextStop.note || "特記事項なし"}</span>
+        </div>
+      </div>
+
+      <div className="driver-primary-panel">
+        <div>
+          <div className="subtle">今押すボタン</div>
+          <p>停車してから操作してください。</p>
+        </div>
+        {primaryAction ? (
+          <button
+            className="primary-button driver-main-action"
+            type="button"
+            onClick={() => onEvent(nextStop, primaryAction.eventType)}
+          >
+            {primaryAction.icon} {primaryAction.label}
+          </button>
+        ) : (
+          <div className="driver-complete-message">この訪問先は記録済みです。</div>
+        )}
+      </div>
+
+      <div className="driver-sub-actions">
+        <button className="secondary-button" type="button" onClick={() => setShowContact((current) => !current)}>
+          <ClipboardCheck size={16} /> {showContact ? "連絡先を閉じる" : "連絡先確認"}
+        </button>
+        <button className="secondary-button" type="button" disabled={nextStop.events.length === 0} onClick={() => onUndo(nextStop)}>
+          <RotateCcw size={16} /> 直前取消
+        </button>
+        <button className="danger-button" type="button" disabled={nextStop.status !== "planned"} onClick={() => onEvent(nextStop, "skip", "ドライバー画面でキャンセル")}>
+          <ArrowLeft size={16} /> キャンセル
+        </button>
+      </div>
+
+      {showContact ? (
+        <div className="driver-contact-panel" aria-label="連絡先と注意事項">
+          <div>
+            <span className="subtle">利用者</span>
+            <strong>{displayName}</strong>
+          </div>
+          <div>
+            <span className="subtle">電話</span>
+            <strong>{displayPhone || "未登録"}</strong>
+          </div>
+          <div>
+            <span className="subtle">住所</span>
+            <strong>{displayAddress || "未登録"}</strong>
+          </div>
+          <div>
+            <span className="subtle">注意事項</span>
+            <strong>{nextStop.note || "なし"}</strong>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="driver-step-panel">
+        <h3>操作の順番</h3>
         <div className="driver-actions">
           <button
-            className="primary-button driver-action-button"
+            className="driver-action-button"
             type="button"
             disabled={nextStop.status !== "planned"}
             onClick={() => onEvent(nextStop, "arrive")}
           >
-            <LogIn size={22} /> 到着した
+            <LogIn size={20} /> 到着
           </button>
           <button
-            className="primary-button driver-action-button"
+            className="driver-action-button"
             type="button"
             disabled={nextStop.status !== "arrived"}
             onClick={() => onEvent(nextStop, "board")}
           >
-            <Check size={22} /> 乗った / 降りた
+            <Check size={20} /> 乗降
           </button>
           <button
-            className="primary-button driver-action-button"
+            className="driver-action-button"
             type="button"
             disabled={nextStop.status !== "boarded"}
             onClick={() => onEvent(nextStop, "depart")}
           >
-            <LogOut size={22} /> 出発する
+            <LogOut size={20} /> 出発
           </button>
           <button
-            className="primary-button driver-action-button"
+            className="driver-action-button"
             type="button"
             disabled={nextStop.status !== "departed"}
             onClick={() => onEvent(nextStop, "complete")}
           >
-            <Check size={22} /> 完了した
+            <Check size={20} /> 完了
           </button>
-          <div className="summary-row">
-            <button className="secondary-button" type="button" onClick={() => setShowContact((current) => !current)}>
-              <ClipboardCheck size={16} /> {showContact ? "連絡先を閉じる" : "連絡先確認"}
-            </button>
-            <button className="secondary-button" type="button" disabled={nextStop.events.length === 0} onClick={() => onUndo(nextStop)}>
-              <RotateCcw size={16} /> 直前取消
-            </button>
-            <button className="danger-button" type="button" disabled={nextStop.status !== "planned"} onClick={() => onEvent(nextStop, "skip", "ドライバー画面でキャンセル")}>
-              <ArrowLeft size={16} /> キャンセル
-            </button>
-          </div>
-          {showContact ? (
-            <div className="driver-contact-panel" aria-label="連絡先と注意事項">
-              <div>
-                <span className="subtle">利用者</span>
-                <strong>{displayName}</strong>
-              </div>
-              <div>
-                <span className="subtle">電話</span>
-                <strong>{displayPhone || "未登録"}</strong>
-              </div>
-              <div>
-                <span className="subtle">住所</span>
-                <strong>{displayAddress || "未登録"}</strong>
-              </div>
-              <div>
-                <span className="subtle">注意事項</span>
-                <strong>{nextStop.note || "なし"}</strong>
-              </div>
-            </div>
-          ) : null}
         </div>
+      </div>
+
+      <div className="driver-list-panel">
+        <h3>このあと</h3>
+        <ol>
+          {remainingStops.slice(0, 4).map((stop, index) => {
+            const stopUser = data.users.find((item) => item.id === stop.userId);
+            const stopUserIndex = data.users.findIndex((item) => item.id === stop.userId);
+            return (
+              <li key={stop.id} aria-current={stop.id === nextStop.id ? "step" : undefined}>
+                <span>{index + 1}</span>
+                <strong>{masked ? maskName(stopUser?.name ?? "", stopUserIndex) : stopUser?.name}</strong>
+                <small>{stop.scheduledTime ?? "--:--"}</small>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
+}
+
+function getPrimaryAction(status: RideStop["status"]): {
+  eventType: RideEvent["eventType"];
+  label: string;
+  icon: ReactNode;
+} | undefined {
+  switch (status) {
+    case "planned":
+      return { eventType: "arrive", label: "到着した", icon: <LogIn size={30} /> };
+    case "arrived":
+      return { eventType: "board", label: "乗った / 降りた", icon: <Check size={30} /> };
+    case "boarded":
+      return { eventType: "depart", label: "出発する", icon: <LogOut size={30} /> };
+    case "departed":
+      return { eventType: "complete", label: "完了した", icon: <Check size={30} /> };
+    case "completed":
+    case "skipped":
+      return undefined;
+  }
 }
