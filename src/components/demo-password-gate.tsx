@@ -3,6 +3,7 @@
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { LockKeyhole } from "lucide-react";
+import type { Role } from "@/components/app-shell";
 import {
   DEMO_PASSWORD_SESSION_KEY,
   getExpectedDemoPasswordHash,
@@ -12,9 +13,17 @@ import {
 
 type DemoPasswordGateProps = {
   children: ReactNode;
+  role: Role;
+  onRoleChange: (role: Role) => void;
 };
 
-export function DemoPasswordGate({ children }: DemoPasswordGateProps) {
+const loginRoles: Array<{ key: Role; label: string; description: string }> = [
+  { key: "admin", label: "管理者", description: "今日の運行と配車を確認" },
+  { key: "facility", label: "施設職員", description: "施設側で進捗を見る" },
+  { key: "driver", label: "ドライバー", description: "車内で送迎を記録" },
+];
+
+export function DemoPasswordGate({ children, role, onRoleChange }: DemoPasswordGateProps) {
   const enabled = isDemoPasswordGateEnabled();
   const expectedHash = getExpectedDemoPasswordHash();
   const [password, setPassword] = useState("");
@@ -61,6 +70,23 @@ export function DemoPasswordGate({ children }: DemoPasswordGateProps) {
         <div className="password-copy">
           <h1 id="password-title">送迎支援デモ</h1>
           <p>共有されたデモ用パスワードを入力してください。</p>
+        </div>
+        <div className="login-role-group" aria-label="ログインする画面">
+          <div className="subtle">使う画面を選んでください</div>
+          <div className="login-role-list">
+            {loginRoles.map((item) => (
+              <button
+                className="login-role-button"
+                type="button"
+                aria-pressed={role === item.key}
+                onClick={() => onRoleChange(item.key)}
+                key={item.key}
+              >
+                <strong>{item.label}</strong>
+                <span>{item.description}</span>
+              </button>
+            ))}
+          </div>
         </div>
         <input
           className="credential-helper"

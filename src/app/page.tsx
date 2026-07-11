@@ -199,27 +199,29 @@ export default function Home() {
     setView("simulation");
   }
 
+  function handleRoleChange(nextRole: Role) {
+    setRole(nextRole);
+    if (nextRole === "driver") {
+      setView("driver");
+    } else if (nextRole === "facility") {
+      setView("progress");
+    } else {
+      setView("operations");
+    }
+  }
+
   return (
-    <DemoPasswordGate>
+    <DemoPasswordGate role={role} onRoleChange={handleRoleChange}>
       <AppShell
-      role={role}
-      view={view}
-      masked={masked}
-      serviceDate={data.serviceDate}
-      weather={data.weather}
-      onRoleChange={(nextRole) => {
-        setRole(nextRole);
-        if (nextRole === "driver") {
-          setView("driver");
-        } else if (nextRole === "facility") {
-          setView("progress");
-        } else {
-          setView("operations");
-        }
-      }}
-      onViewChange={setView}
-      onMaskedChange={setMasked}
-    >
+        role={role}
+        view={view}
+        masked={masked}
+        serviceDate={data.serviceDate}
+        weather={data.weather}
+        onRoleChange={handleRoleChange}
+        onViewChange={setView}
+        onMaskedChange={setMasked}
+      >
       {loading ? <div className="empty">DBから読み込み中です。</div> : null}
       {errorMessage ? <div className="notice">{errorMessage}</div> : null}
       {["plan", "driver", "progress", "results", "export"].includes(view) ? (
@@ -230,12 +232,10 @@ export default function Home() {
           data={data}
           onGoToPlan={() => setView("plan")}
           onGoToDriver={() => {
-            setRole("driver");
-            setView("driver");
+            handleRoleChange("driver");
           }}
           onGoToProgress={() => {
-            setRole("facility");
-            setView("progress");
+            handleRoleChange("facility");
           }}
           onGoToResults={() => setView("results")}
           onGoToExport={() => setView("export")}
@@ -250,12 +250,10 @@ export default function Home() {
           onClearData={() => void handleClearDemoData()}
           onGoToPlan={() => setView("plan")}
           onGoToDriver={() => {
-            setRole("driver");
-            setView("driver");
+            handleRoleChange("driver");
           }}
           onGoToProgress={() => {
-            setRole("facility");
-            setView("progress");
+            handleRoleChange("facility");
           }}
           onGoToResults={() => setView("results")}
         />
@@ -290,8 +288,7 @@ export default function Home() {
           masked={masked}
           readonly={view === "progress"}
           onNavigateToDriver={() => {
-            setRole("driver");
-            setView("driver");
+            handleRoleChange("driver");
           }}
         />
       ) : null}
